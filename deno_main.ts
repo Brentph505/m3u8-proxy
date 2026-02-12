@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.210.0/http/server.ts";
 // Load environment variables from Deno runtime
 const env = Deno.env.toObject();
 
-const HOST = env["HOST"] || "127.0.0.1";
+const HOST = env["HOST"] || "0.0.0.0";
 const PORT = parseInt(env["PORT"] || "8080");
 const PUBLIC_URL = env["PUBLIC_URL"] || `http://${HOST}:${PORT}`;
 const ALLOWED_ORIGINS = env["ALLOWED_ORIGINS"]
