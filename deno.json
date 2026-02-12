@@ -5,15 +5,5 @@
   },
   "imports": {
     "std/http": "https://deno.land/std@0.210.0/http/server.ts"
-  },
-  "compilerOptions": {
-    "lib": ["deno.window", "es2022"],
-    "target": "ES2022"
-  },
-  "exclude": ["src", "api", "node_modules", ".git"],
-  "lint": {
-    "rules": {
-      "tags": ["recommended"]
-    }
   }
 }
