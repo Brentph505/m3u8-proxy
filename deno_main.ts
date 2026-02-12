@@ -1,6 +1,4 @@
-/// <reference path="./deno.d.ts" />
-
-import { serve } from "std/http";
+import { serve } from "https://deno.land/std@0.210.0/http/server.ts";
 
 // Load environment variables from Deno runtime
 const env = Deno.env.toObject();
@@ -155,20 +153,10 @@ async function handler(req: Request): Promise<Response> {
   } else if (url.pathname === "/ts-proxy") {
     return handleTsProxy(req, url.pathname);
   } else if (url.pathname === "/" || url.pathname === "") {
-    // Serve the HTML page
-    try {
-      const html =
-        typeof Deno !== "undefined"
-          ? await Deno.readTextFile("./src/index.html")
-          : "Welcome to M3U8 Proxy";
-      return new Response(html, {
-        headers: { "Content-Type": "text/html; charset=utf-8" },
-      });
-    } catch {
-      return new Response("Welcome to M3U8 Proxy", {
-        headers: { "Content-Type": "text/plain" },
-      });
-    }
+    // Serve a welcome page
+    return new Response("Welcome to M3U8 Proxy\n\nUse /m3u8-proxy?url=YOUR_M3U8_URL to proxy an M3U8 file.", {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
   }
 
   return new Response("Not Found", { status: 404 });
