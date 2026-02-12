@@ -7,8 +7,8 @@ const HOST = env["HOST"] || "127.0.0.1";
 const PORT = parseInt(env["PORT"] || "8080");
 const PUBLIC_URL = env["PUBLIC_URL"] || `http://${HOST}:${PORT}`;
 const ALLOWED_ORIGINS = env["ALLOWED_ORIGINS"]
-  ? env["ALLOWED_ORIGINS"].split(",")
-  : [];
+  ? env["ALLOWED_ORIGINS"].split(",").map((o) => o.trim())
+  : ["*"]; // Default to allow all origins
 
 interface ProxyOptions {
   originBlacklist: string[];
@@ -131,15 +131,6 @@ async function handleTsProxy(
 
 async function handler(req: Request): Promise<Response> {
   const url = new URL(req.url);
-  const origin = req.headers.get("origin") || "";
-
-  // CORS check
-  if (!isOriginAllowed(origin, options)) {
-    return new Response(
-      `The origin "${origin}" was blacklisted by the operator of this proxy.`,
-      { status: 403 }
-    );
-  }
 
   // Handle CORS preflight
   const corsResponse = handleCors(req);
