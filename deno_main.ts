@@ -3,34 +3,11 @@ import { serve } from "https://deno.land/std@0.210.0/http/server.ts";
 // Load environment variables from Deno runtime
 const env = Deno.env.toObject();
 
-const HOST = env["HOST"] || "0.0.0.0";
-const PORT = parseInt(env["PORT"] || "8080");
-const PUBLIC_URL = env["PUBLIC_URL"] || `http://${HOST}:${PORT}`;
-const ALLOWED_ORIGINS = env["ALLOWED_ORIGINS"]
-  ? env["ALLOWED_ORIGINS"].split(",").map((o) => o.trim())
-  : ["*"]; // Default to allow all origins
+const HOST = "0.0.0.0";
+const PORT = 8080;
 
-interface ProxyOptions {
-  originBlacklist: string[];
-  originWhitelist: string[];
-}
-
-const options: ProxyOptions = {
-  originBlacklist: ["*"],
-  originWhitelist: ALLOWED_ORIGINS,
-};
-
-const isOriginAllowed = (origin: string, opts: ProxyOptions): boolean => {
-  if (opts.originWhitelist.includes("*")) {
-    return true;
-  }
-  if (opts.originWhitelist.length && !opts.originWhitelist.includes(origin)) {
-    return false;
-  }
-  if (opts.originBlacklist.length && opts.originBlacklist.includes(origin)) {
-    return false;
-  }
-  return true;
+const isOriginAllowed = (): boolean => {
+  return true; // Allow all origins by default
 };
 
 const handleCors = (req: Request): Response | null => {
@@ -157,3 +134,11 @@ console.log(
   `🚀 M3U8 Proxy Server running on http://${HOST}:${PORT}`
 );
 await serve(handler, { hostname: HOST, port: PORT });
+`🚀 M3U8 Proxy Server running on http://${HOST}:${PORT}`);
+
+try {
+  await serve(handler, { hostname: HOST, port: PORT });
+} catch (error) {
+  console.error("Server error:", error);
+  Deno.exit(1);
+}

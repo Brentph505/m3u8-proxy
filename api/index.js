@@ -12,10 +12,8 @@ const httpProxyOptions = {
 const proxyServer = httpProxy.createProxyServer(httpProxyOptions);
 const requestHandler = getHandler(
   {
-    originBlacklist: ["*"],
-    originWhitelist: process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(",")
-      : [],
+    originBlacklist: [],
+    originWhitelist: ["*"], // Allow all origins by default
     requireHeader: [],
     removeHeaders: [
       "cookie",
@@ -52,44 +50,11 @@ const handleCors = (req, res) => {
   return false;
 };
 
-const isOriginAllowed = (origin, options) => {
-  if (options.originWhitelist.includes("*")) {
-    return true;
-  }
-  if (
-    options.originWhitelist.length &&
-    !options.originWhitelist.includes(origin)
-  ) {
-    return false;
-  }
-  if (
-    options.originBlacklist.length &&
-    options.originBlacklist.includes(origin)
-  ) {
-    return false;
-  }
-  return true;
-};
-
 // Vercel Serverless Function
 export default function handler(req, res) {
-  const origin = req.headers.origin || "";
-
-  if (
-    !isOriginAllowed(origin, {
-      originBlacklist: ["*"],
-      originWhitelist: process.env.ALLOWED_ORIGINS
-        ? process.env.ALLOWED_ORIGINS.split(",")
-        : [],
-    })
-  ) {
-    res.writeHead(403, "Forbidden");
-    res.end(
-      `The origin "${origin}" was blacklisted by the operator of this proxy.`
-    );
-    return;
-  }
-
+  // Handle CORS preflight
   if (handleCors(req, res)) return;
+  
+  // Process the proxy request
   requestHandler(req, res);
 }

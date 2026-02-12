@@ -1,6 +1,20 @@
-addEventListener("fetch", (event) => {
-  event.respondWith(handleRequest(event.request));
-});
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/m3u8-proxy") {
+      return handleM3U8Proxy(request);
+    } else if (url.pathname === "/ts-proxy") {
+      return handleTsProxy(request);
+    } else if (url.pathname === "/" || url.pathname === "") {
+      return new Response("Welcome to M3U8 Proxy\n\nUse /m3u8-proxy?url=YOUR_M3U8_URL to proxy an M3U8 file.", {
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
+    }
+
+    return new Response("Not Found", { status: 404 });
+  },
+};
 
 async function handleRequest(request) {
   const url = new URL(request.url);
@@ -42,12 +56,9 @@ async function handleM3U8Proxy(request) {
   const { searchParams } = new URL(request.url);
   const targetUrl = searchParams.get("url");
   const headers = JSON.parse(searchParams.get("headers") || "{}");
-  const origin = request.headers.get("Origin") || "";
 
-  if (!isOriginAllowed(origin, options)) {
-    return new Response(`The origin "${origin}" is not allowed.`, {
-      status: 403,
-    });
+  if (!targetUrl) {
+    return new Response("Missing URL parameter", { status: 400 });
   }
   if (!targetUrl) {
     return new Response("URL is required", { status: 400 });
@@ -109,13 +120,7 @@ async function handleTsProxy(request) {
   const { searchParams } = new URL(request.url);
   const targetUrl = searchParams.get("url");
   const headers = JSON.parse(searchParams.get("headers") || "{}");
-  const origin = request.headers.get("Origin") || "";
 
-  if (!isOriginAllowed(origin, options)) {
-    return new Response(`The origin "${origin}" is not allowed.`, {
-      status: 403,
-    });
-  }
   if (!targetUrl) {
     return new Response("URL is required", { status: 400 });
   }

@@ -1,0 +1,16 @@
+{
+  "name": "m3u8-proxy",
+  "main": "m3u8proxy(cf_worker).js",
+  "compatibility_date": "2026-02-12",
+  "env": {
+    "production": {
+      "name": "m3u8-proxy-production",
+      "routes": [
+        {
+          "pattern": "example.com/*",
+          "zone_name": "example.com"
+        }
+      ]
+    }
+  }
+}
