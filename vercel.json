@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 120
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.js",
+      "methods": ["GET", "POST", "OPTIONS"]
+    }
+  ],
+  "env": {
+    "PUBLIC_URL": "@public_url",
+    "ALLOWED_ORIGINS": "@allowed_origins"
+  }
+}

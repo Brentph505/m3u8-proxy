@@ -1,0 +1,29 @@
+{
+  "tasks": {
+    "start": "deno run --allow-net --allow-env --allow-read deno_main.ts",
+    "dev": "deno run --allow-net --allow-env --allow-read --watch deno_main.ts"
+  },
+  "imports": {
+    "std/": "https://deno.land/std@0.210.0/",
+    "std/http": "https://deno.land/std@0.210.0/http/server.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window", "es2022"],
+    "target": "ES2022",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
+  "fmt": {
+    "semiColons": true,
+    "singleQuote": false
+  }
+}
