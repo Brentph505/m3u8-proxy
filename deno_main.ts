@@ -3,7 +3,7 @@
 import { serve } from "std/http";
 
 // Load environment variables from Deno runtime
-const env = typeof Deno !== "undefined" ? Deno.env.toObject() : {};
+const env = Deno.env.toObject();
 
 const HOST = env["HOST"] || "127.0.0.1";
 const PORT = parseInt(env["PORT"] || "8080");
